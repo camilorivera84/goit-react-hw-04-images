@@ -15,13 +15,7 @@ const App = () => {
   const [page, setPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  useEffect(() => {
-    if (searchQuery !== '') {
-      fetchImages();
-    }
-  }, [searchQuery, page]);
-
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(
@@ -37,7 +31,13 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, page]);
+
+  useEffect(() => {
+    if (searchQuery !== '') {
+      fetchImages();
+    }
+  }, [searchQuery, fetchImages]);
 
   const handleSearch = useCallback(query => {
     setSearchQuery(query);
